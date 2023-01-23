@@ -1,5 +1,6 @@
 'use strict'
-import { BN, bufferToHex, keccak, setLengthLeft, toBuffer, addHexPrefix } from 'ethereumjs-util'
+import { bufferToHex, keccak, setLengthLeft, toBuffer, addHexPrefix } from 'ethereumjs-util'
+import { bigIntToHex } from '@ethereumjs/util'
 import stringSimilarity from 'string-similarity'
 
 /*
@@ -35,12 +36,8 @@ export function hexToIntArray (hexString) {
 export function hexListFromBNs (bnList) {
   const ret = []
   for (const k in bnList) {
-    const v = bnList[k]
-    if (BN.isBN(v)) {
-      ret.push('0x' + v.toString('hex', 64))
-    } else {
-      ret.push('0x' + (new BN(v)).toString('hex', 64)) // TEMP FIX TO REMOVE ONCE https://github.com/ethereumjs/ethereumjs-vm/pull/293 is released
-    }
+    const v = bnList[k].toString(16)
+    ret.push('0x' + v.padStart(64, '0'))
   }
   return ret
 }
